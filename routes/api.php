@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\TextUI\XmlConfiguration\Group;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//Route::resource('event', [EventController::class]);
+
+//Route::get('/event/{date?}', [EventController::class, 'index']);
+
+Route::apiResource('event', EventController::class);
+
