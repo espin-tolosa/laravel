@@ -4,18 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Shows all events since two months ago, time server
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(string $date = null)
+    public function index()
     {
-        return !$date ? Event::all() : Event::all()->where('start','>=', $date);
+        $date = Carbon::now()->subMonths(2);
+        $events = Event::all()->where('end','>=', $date);
+        return EventResource::collection($events);
+    }
+ 
+    /**
+     * Filter index by user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexUser(string $name)
+    {
+        return $this->index()->where('client', '==', $name);
     }
 
     /**
@@ -36,7 +50,7 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        //
+        return Event::create($request->all());
     }
 
     /**

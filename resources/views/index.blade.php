@@ -13,7 +13,7 @@
   <body>
     
     <section class="flex justify-center items-center h-full w-full text-lg">
-        <form method="POST" action="/board" class="flex flex-col relative mx-0 my-auto p-5 text-base">
+        <form method="POST" action="/authenticate" class="flex flex-col relative mx-0 my-auto p-5 text-base">
             <input type="text" placeholder="User" name="user" class="p-2 bg-yellow-50 text-orange-500 mb-4 rounded-md outline-none transition-shadow shadow-sm hover:shadow-md focus:shadow-md text-base">
             @csrf
             <input type="password" placeholder="Password" autocomplete="on" name="password" class="p-2 bg-yellow-50 text-orange-500 mb-4 rounded-md outline-none transition-shadow shadow-sm hover:shadow-md focus:shadow-md text-base">
