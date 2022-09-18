@@ -18,29 +18,24 @@ use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function (Request $request)
 {
-
     return !User::isAuth($request) ? view('index') :
         redirect('/board'.User::path($request));
-
 });
 
-Route::get('/board/{user}', function(Request $request) {
-
+Route::get('/board/{user}', function(Request $request)
+{
     return User::isAuth($request) ? response(view('master')) :
         redirect('/');
-
 });
 
 Route::post('/authenticate', function(Request $request)
 {
-
     return User::checkUser($request) ? redirect('/')->withCookie('auth', 'yes') :
         redirect('/');
+});
 
-})->name('authenticate');
-
-Route::get('/assets/{file}', function ($file) {
-     
+Route::get('/assets/{file}', function ($file)
+{     
     $attributes = explode('.', $file);
 	$type = $attributes[array_key_last($attributes)];
     
@@ -64,5 +59,4 @@ Route::get('/assets/{file}', function ($file) {
     return response($content, $status)
         ->header('Content-Type', $content_type[$type] )
         ->header('Cache-Control', $max_age[$type]) ;
-
 });

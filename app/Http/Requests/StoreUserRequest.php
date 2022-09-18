@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
+
+class StoreUserRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     * 
+     * 1. Validate incoming data
+     * 
+     * 2. Create a new user
+     * 
+     * 3. Send back a response with the new api token
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules()
+    {
+        return [
+            'name' => ['required', 'string', 'max:255', 'unique:users'],
+            'role' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'confirmed', Password::default() ],
+            'style' => ['required', 'string', 'max:8'],
+        ];
+    }
+}
