@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Requests\LoginUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,21 +22,32 @@ use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function (Request $request)
 {
+    $auth_user = $request->cookie('auth');
+
     return !User::isAuth($request) ? view('index') :
-        redirect('/board'.User::path($request));
+        redirect("/board/$auth_user");
 });
 
-Route::get('/board/{user}', function(Request $request)
+/**
+ * 
+ */
+
+Route::get('/board/{name}', function(Request $request, string $name)
 {
-    return User::isAuth($request) ? response(view('master')) :
-        redirect('/');
+    $isAuth = User::isAuth($request);
+    $isURI = User::isURIOfAuthUser($request, $name);
+
+    if(!$isAuth || !$isURI)
+    {
+        return redirect('/')->withCookie(Cookie::forget('auth')) ;
+    }
+
+    $role = User::where('name', $name)->value('role');
+
+    return response(view($role));
 });
 
-Route::post('/authenticate', function(Request $request)
-{
-    return User::checkUser($request) ? redirect('/')->withCookie('auth', 'yes') :
-        redirect('/');
-});
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/assets/{file}', function ($file)
 {     

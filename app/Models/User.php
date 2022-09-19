@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Http\Requests\LoginUserRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -57,19 +60,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if a POST request identify a valid user
-     * by comparing with server database
+     * isURIOfAuthUser:
+     * 
+     * This protects our route in case of someone tries to force a request with another user name
+     * typing it directly in the http bar of the web browser
+     * 
+     * It checks if the cookie set by authenticate route is the requested one,
+     * so only allow to pass one URI among any other possiblity, which is the one signed by authenticate route
+     * 
+     * As this is a get request, this way is protects
+     * 
+     * TODO: move this to a static method of User model
      */
-    public static function checkUser(Request $request)
+    public static function isURIOfAuthUser(Request $request, string $userURI)
     {
-        $isUser = $request->get('user') === 'samuel';
-        $isPass = $request->get('password') === 'freesolo';
-
-        return $isUser && $isPass;
+        return $userURI === $request->cookie('auth');
     }
 
-    public static function path(Request $request)
-    {
-        return '/'.'samuel';
-    }
+    //public static function 
 }

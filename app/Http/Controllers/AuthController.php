@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     use HttpResponses;
 
-    public function login()
+    public function login(LoginUserRequest $request)
     {
-        return 'Login';
+        $request->validated($request->all());
+
+        $isAuth = Auth::attempt($request->only('name', 'password'));
+        return $isAuth ? redirect('/')->withCookie('auth', $request->get('name')) :
+            redirect('/');
     }
 
     public function register(StoreUserRequest $request)
