@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -44,6 +45,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        return response()->json('This is logout method');
+        $cookie = Cookie::forget('auth');
+        return redirect('/')->withCookie($cookie);
     }
 }

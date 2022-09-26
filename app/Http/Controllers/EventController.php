@@ -6,7 +6,9 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -21,15 +23,30 @@ class EventController extends Controller
         $events = Event::all()->where('end','>=', $date);
         return EventResource::collection($events);
     }
- 
+
     /**
      * Filter index by user
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexUser(string $name)
+    public function indexUser(Request $request, string $name)
     {
-        return $this->index()->where('client', '==', $name);
+        //if(!User::isAuth($request))
+        //{
+            //return "";
+        //}
+        $events = $this->index();
+
+        foreach($events as &$event)
+        {
+            if($event['client'] !== $name )
+            {
+                $event['client'] = 'MISC';
+                $event['job'] = '';
+            }
+
+        }
+        return $events;
     }
 
     /**

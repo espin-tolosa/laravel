@@ -19,29 +19,26 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/event'      , [EventController::class, 'index']);
+Route::get('/event/{user}', [EventController::class, 'indexUser'])->whereAlphaNumeric('user');
 
-Route::group(['middleware' => ['auth:sanctum']], function ()
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/event', [EventController::class, 'store']);
+Route::get('/styles', function()
 {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/event'      , [EventController::class, 'index']);
-    Route::get('/event/{user}', [EventController::class, 'indexUser'])->whereAlphaNumeric('user');
-    Route::post('/event', [EventController::class, 'store']);
-    Route::get('/styles', function()
-    {
-        return response()->json([
-            'JTP' => ['primary' => '#03fcdf', 'secondary' => '#04758f'],
-            'CW'  => ['primary' => '#e8f0a3', 'secondary' => '#e2f252'],
-            'ST'  => ['primary' => '#d99ee8', 'secondary' => '#c034e3'],
-            'AM'  => ['primary' => '#abe3a1', 'secondary' => '#47d42f'],
-            'EPR' => ['primary' => '#b596d9', 'secondary' => '#7b27db'],
-            'BDM' => ['primary' => '#deb6a6', 'secondary' => '#deb6a6'],
-            'GHA' => ['primary' => '#afd6a7', 'secondary' => '#35ba1a'],
-            'BDP' => ['primary' => '#9f9fd6', 'secondary' => '#9f9fd6'],
-            'MB'  => ['primary' => '#aa99de', 'secondary' => '#542bcf'],
-            'MISC'=> ['primary' => '#c9939c', 'secondary' => '#cc354e']
-        ]);
-    });
+    return response()->json([
+        'JTP' => ['primary' => '#03fcdf', 'secondary' => '#04758f'],
+        'CW'  => ['primary' => '#e8f0a3', 'secondary' => '#e2f252'],
+        'ST'  => ['primary' => '#d99ee8', 'secondary' => '#c034e3'],
+        'AM'  => ['primary' => '#abe3a1', 'secondary' => '#47d42f'],
+        'EPR' => ['primary' => '#b596d9', 'secondary' => '#7b27db'],
+        'BDM' => ['primary' => '#deb6a6', 'secondary' => '#deb6a6'],
+        'GHA' => ['primary' => '#afd6a7', 'secondary' => '#35ba1a'],
+        'BDP' => ['primary' => '#9f9fd6', 'secondary' => '#9f9fd6'],
+        'MB'  => ['primary' => '#aa99de', 'secondary' => '#542bcf'],
+        'MISC'=> ['primary' => '#c9939c', 'secondary' => '#cc354e'],
+        'PRIV'=> ['primary' => '#b3b4b6', 'secondary' => '#b3b4b6'],
+    ]);
 });
 
 

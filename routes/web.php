@@ -48,6 +48,7 @@ Route::get('/board/{name}', function(Request $request, string $name)
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::get('/assets/{file}', function ($file)
 {     
