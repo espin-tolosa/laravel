@@ -8,7 +8,10 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Models\User;
 use Carbon\Carbon;
+use Error;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Crypt;
 
 class EventController extends Controller
 {
@@ -19,10 +22,31 @@ class EventController extends Controller
      */
     public function index()
     {
+        /**
+         * Check role of user by inspecting the auth cookie
+         * It is not Laravel style but does the job now.
+         */
+        try {
+            $name = explode("|", Crypt::decrypt(Cookie::get('auth'), false))[1];
+        }
+
+        catch (Error $error)
+        {
+            return [];
+        }
+
+        $role = User::where('name', $name)->value('role');
+
+        if($role !== 'master')
+        {
+            return [];
+        }
+
         $date = Carbon::now()->subMonths(2);
         $events = Event::all()->where('end','>=', $date);
         return EventResource::collection($events);
     }
+
 
     /**
      * Filter index by user
