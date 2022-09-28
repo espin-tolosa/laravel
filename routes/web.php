@@ -29,7 +29,7 @@ Route::get('/', function (Request $request)
 });
 
 /**
- * 
+ *
  */
 
 Route::get('/board/{name}', function(Request $request, string $name)
@@ -51,20 +51,20 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::get('/assets/{file}', function ($file)
-{     
+{
     $attributes = explode('.', $file);
-	$type = $attributes[array_key_last($attributes)];
-    
-	$content_type = [	'js' => 'application/javascript',
-	                    'css' => 'text/css',
-	                    'svg' => 'image/svg+xml',
-	                    'ttf' => 'font/ttf'
+    $type = $attributes[array_key_last($attributes)];
+
+    $content_type = [ 'js'  => 'application/javascript',
+                      'css' => 'text/css',
+                      'svg' => 'image/svg+xml',
+                      'ttf' => 'font/ttf'
                     ];
-	
-    $max_age =      [	'js' => 'max-age=0',
-	                    'css' => 'max-age=31536000',
-	                    'svg' => 'max-age=31536000',
-	                    'ttf' => 'max-age=31536000'
+
+    $max_age      = [ 'js'  => 'max-age=31536000',
+                      'css' => 'max-age=31536000',
+                      'svg' => 'max-age=31536000',
+                      'ttf' => 'max-age=31536000'
                     ];
 
     $isAsset = Storage::disk('public')->exists($file);

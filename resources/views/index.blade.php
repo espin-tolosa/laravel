@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.f8e3f738.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JH Calendar</title>
-    <link rel="stylesheet" href="/assets/index.90ed9c43.css">
+    <link rel="stylesheet" href="/assets/index.login.css">
   </head>
 
   <body>

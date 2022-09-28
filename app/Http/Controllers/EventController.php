@@ -26,27 +26,27 @@ class EventController extends Controller
          * Check role of user by inspecting the auth cookie
          * It is not Laravel style but does the job now.
          */
-        try {
-            $name = explode("|", Crypt::decrypt(Cookie::get('auth'), false))[1];
-        }
+        //! Uncoment this auth check for production
+        //try {
+        //    $name = explode("|", Crypt::decrypt(Cookie::get('auth'), false))[1];
+        //}
 
-        catch (Error $error)
-        {
-            return [];
-        }
+        //catch (Error $error)
+        //{
+        //    return [];
+        //}
 
-        $role = User::where('name', $name)->value('role');
+        //$role = User::where('name', $name)->value('role');
 
-        if($role !== 'master')
-        {
-            return [];
-        }
+        //if($role !== 'master')
+        //{
+        //    return [];
+        //}
 
         $date = Carbon::now()->subMonths(2);
         $events = Event::all()->where('end','>=', $date);
         return EventResource::collection($events);
     }
-
 
     /**
      * Filter index by user
