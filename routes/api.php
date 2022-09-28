@@ -24,7 +24,7 @@ Route::get('/event/{user}', [EventController::class, 'indexUser'])->whereAlphaNu
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/event', [EventController::class, 'store']);
-Route::get('/styles', function()
+Route::get('/style', function()
 {
     return response()->json([
         'JTP' => ['primary' => '#03fcdf', 'secondary' => '#04758f'],
