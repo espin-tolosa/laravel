@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SpaController;
 use App\Http\Requests\LoginUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -28,32 +29,23 @@ Route::get('/', function (Request $request)
         redirect("/board/$auth_user");
 });
 
-/**
- *
- */
-
-Route::get('/board/{name}', function(Request $request, string $name)
-{
-    $isAuth = User::isAuth($request);
-    $isURI = User::isURIOfAuthUser($request, $name);
-
-    if(!$isAuth || !$isURI)
-    {
-        return redirect('/')->withCookie(Cookie::forget('auth')) ;
-    }
-
-    $role = User::where('name', $name)->value('role');
-
-    return response(view($role));
-});
-
+// Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
+
+// Register all routes of my SPA: this allows to call the page directly
+Route::get('/board/{name}', [SpaController::class, 'index']);
+Route::get('/backoffice/{name}', [SpaController::class, 'index']);
 
 Route::get('/assets/{file}', function ($file)
 {
     $attributes = explode('.', $file);
     $type = $attributes[array_key_last($attributes)];
+
+    //TODO: In the final build, take the name of each JS bundle and protect them like:
+    // MASTER: index.61faa932.js
+    // CLIENT: index.f3a42931.js
+    // etc...
 
     $content_type = [ 'js'  => 'application/javascript',
                       'css' => 'text/css',
