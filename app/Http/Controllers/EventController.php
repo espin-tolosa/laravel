@@ -43,6 +43,12 @@ class EventController extends Controller
         //    return [];
         //}
 
+        return [];
+
+    }
+
+    private function getAll()
+    {
         $date = Carbon::now()->subMonths(2);
         $events = Event::all()->where('end','>=', $date);
         return EventResource::collection($events);
@@ -54,12 +60,19 @@ class EventController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function indexUser(Request $request, string $name)
-    {
-        //if(!User::isAuth($request))
-        //{
-            //return "";
-        //}
-        $events = $this->index();
+    {        
+        if(!User::isAuth($request))
+        {
+            return [];
+        }
+
+        $events = $this->getAll();
+        
+        $role = User::where('name', $name)->value('role');
+        if($role === "master")
+        {
+            return $events;
+        }
 
         foreach($events as &$event)
         {
@@ -91,6 +104,7 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
+        //dd($request);
         return Event::create($request->all());
     }
 
