@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\StyleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/event', [EventController::class, 'store']);
 Route::put('/event/{id}', [EventController::class, 'update']);
 Route::delete('/event/{id}', [EventController::class, 'destroy']);
+//Route::middleware('auth:sanctum')->resource('styles', StyleController::class);
+Route::resource('styles', StyleController::class);
+
 Route::get('/style', function()
 {
     return response()->json([
