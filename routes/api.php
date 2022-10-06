@@ -19,11 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/event'      , [EventController::class, 'index']);
+//Route::get('/event'      , [EventController::class, 'index']);
 Route::get('/event/{user}', [EventController::class, 'indexUser'])->whereAlphaNumeric('user');
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/event', [EventController::class, 'store']);
+Route::put('/event/{id}', [EventController::class, 'update']);
+Route::delete('/event/{id}', [EventController::class, 'destroy']);
 Route::get('/style', function()
 {
     return response()->json([

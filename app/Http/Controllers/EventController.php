@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyEventRequest;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
@@ -12,6 +13,7 @@ use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -69,14 +71,14 @@ class EventController extends Controller
         $events = $this->getAll();
         
         $role = User::where('name', $name)->value('role');
-        if($role === "master")
+        if($role === "master" || $role === "partner")
         {
             return $events;
         }
 
         foreach($events as &$event)
         {
-            if($event['client'] !== $name )
+            if( strtolower($event['client']) !== strtolower($name) )
             {
                 $event['client'] = 'MISC';
                 $event['job'] = '';
@@ -137,9 +139,9 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateEventRequest $request, Event $event)
+    public function update(UpdateEventRequest $request, $id)
     {
-        //
+        return Event::find($id)->update($request->all());
     }
 
     /**
@@ -148,8 +150,8 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event)
+    public function destroy($event)
     {
-        //
+        return Event::destroy($event);
     }
 }
