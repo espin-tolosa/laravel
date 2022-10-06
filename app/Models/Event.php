@@ -13,7 +13,8 @@ class Event extends Model
         'client',
         'job',
         'start',
-        'end'
+        'end',
+        'done'
     ];
 
     public function from(string $date)

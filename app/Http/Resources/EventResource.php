@@ -19,7 +19,8 @@ class EventResource extends JsonResource
             'client' => $this->client,
             'job' => $this->job,
             'start' => $this->start,
-            'end' => $this->end
+            'end' => $this->end,
+            'done' => $this->done
         ];
     }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
 			$table->string('job');
 			$table->date('start');
 			$table->date('end');
+            $table->string('done');
 			$table->timestamps();
         });
     }
