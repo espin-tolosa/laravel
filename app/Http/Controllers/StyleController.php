@@ -6,7 +6,6 @@ use App\Http\Requests\StoreStyleRequest;
 use App\Http\Requests\UpdateStyleRequest;
 use App\Http\Resources\StyleResource;
 use App\Models\Style;
-use App\Models\User;
 
 class StyleController extends Controller
 {

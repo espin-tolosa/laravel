@@ -107,13 +107,23 @@ class EventController extends Controller
             $partnersList []= $partner['name'];
         }
 
-        //5. 
+        //5.
         $filterEvents = [];
 
 
+        /**
+         * These are the criteria to filter events of clients, to avoid overfitted matching, I will add a new columns in envents
+         * with topic, which is shared among styles and events
+         *
+         * TODO: add a `type' column into events to easily filter the type of events visible to users
+         */
         foreach($events as $event)
         {
-            if(in_array($event['client'], $clientsList) || in_array($event['client'], $partnersList) || $event['client'] === 'holiday' )
+            if(
+                in_array($event['client'], $clientsList) ||
+                in_array($event['client'], $partnersList) ||
+                $event['client'] === 'holiday' //this will be easily captured as a public type
+            )
             {
                 $filterEvents []= $event;
             }
@@ -136,7 +146,6 @@ class EventController extends Controller
          {
              if ($event['client'] === 'holiday')
              {
-                $event['client'] = 'Holiday';
                 $event['job'] = '';
                 continue;
             }
