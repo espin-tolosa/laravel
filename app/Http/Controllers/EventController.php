@@ -6,7 +6,9 @@ use App\Http\Requests\DestroyEventRequest;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
+use App\Http\Resources\UserResource;
 use App\Models\Event;
+use App\Models\Style;
 use App\Models\User;
 use Carbon\Carbon;
 use Error;
@@ -59,33 +61,94 @@ class EventController extends Controller
     /**
      * Filter index by user
      *
+     * 1. Check authentication
+     * 2. Get all events since configured date
+     * 3. If user is master -> return all
+     //! Point 4. is a decision, I could trust in Users or in Styles, I decided Styles
+     * 4. Take a list of all possible type of events client, team based on style
+     * 5. Take only events of type client and partner
+     * 6. If user is partner return events of type client and partner
+     * 7. If user is client return only events of type client but censored
+     *
      * @return \Illuminate\Http\Response
      */
     public function indexUser(Request $request, string $name)
-    {        
+    {
+        //1.
         if(!User::isAuth($request))
         {
-            return [];
+            //return [];
         }
 
+        //2.
         $events = $this->getAll();
-        
+
+        //3.
         $role = User::where('name', $name)->value('role');
-        if($role === "master" || $role === "partner")
+        if($role === "master")
         {
             return $events;
         }
 
-        foreach($events as &$event)
+        //4.
+        $clients = Style::all()->where('type', '=', 'client'); //orderBy('role')->get();
+        $clientsData = UserResource::collection($clients);
+        $clientsList = [];
+        foreach($clientsData as $client)
         {
+            $clientsList []= $client['name'];
+        }
+
+        $partners = Style::all()->where('type', '=', 'team'); //orderBy('role')->get();
+        $partnersData = UserResource::collection($partners);
+        $partnersList = [];
+        foreach($partnersData as $partner)
+        {
+            $partnersList []= $partner['name'];
+        }
+
+        //5. 
+        $filterEvents = [];
+
+
+        foreach($events as $event)
+        {
+            if(in_array($event['client'], $clientsList) || in_array($event['client'], $partnersList) || $event['client'] === 'holiday' )
+            {
+                $filterEvents []= $event;
+            }
+        }
+
+        //6.
+        if($role === 'partner')
+        {
+            $fE = [];
+            $fE['data'] = $filterEvents;
+            return $fE;
+        }
+
+        /**
+         * Censored events for clients
+         */
+
+         //7.
+         foreach($filterEvents as &$event)
+         {
+             if ($event['client'] === 'holiday')
+             {
+                $event['client'] = 'Holiday';
+                $event['job'] = '';
+                continue;
+            }
+
             if( strtolower($event['client']) !== strtolower($name) )
             {
-                $event['client'] = 'MISC';
+                $event['client'] = 'unavailable';
                 $event['job'] = '';
             }
 
         }
-        return $events;
+        return EventResource::collection($filterEvents);
     }
 
     /**
@@ -106,7 +169,6 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        //dd($request);
         return Event::create($request->all());
     }
 

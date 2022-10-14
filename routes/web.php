@@ -36,6 +36,7 @@ Route::get('/logout', [AuthController::class, 'logout']);
 // Register all routes of my SPA: this allows to call the page directly
 Route::get('/board/{name}', [SpaController::class, 'index']);
 Route::get('/backoffice/{name}', [SpaController::class, 'index']);
+Route::get('/settings/{name}', [SpaController::class, 'index']);
 
 Route::get('/assets/{file}', function ($file)
 {

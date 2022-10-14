@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStyleRequest;
 use App\Http\Requests\UpdateStyleRequest;
+use App\Http\Resources\StyleResource;
 use App\Models\Style;
 use App\Models\User;
 
@@ -16,7 +17,7 @@ class StyleController extends Controller
      */
     public function index()
     {
-        return Style::all();
+        return StyleResource::collection(Style::all());
     }
 
     /**

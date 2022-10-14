@@ -15,7 +15,8 @@ class SpaController extends Controller
 
         if(!$isAuth || !$isURI)
         {
-            return redirect('/')->withCookie(Cookie::forget('auth')) ;
+            //TODO: Activate this check in production
+            //return redirect('/')->withCookie(Cookie::forget('auth')) ;
         }
 
         $role = User::where('name', $name)->value('role');
