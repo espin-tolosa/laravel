@@ -99,30 +99,38 @@ class EventController extends Controller
             $clientsList []= $client['name'];
         }
 
-        $partners = Style::all()->where('type', '=', 'team'); //orderBy('role')->get();
-        $partnersData = UserResource::collection($partners);
-        $partnersList = [];
-        foreach($partnersData as $partner)
+        //TODO: extract this to a method
+        /**
+         * I get an array of all possible events of some type as: team, but also: public, private to user later to filter
+         * events sent to clients
+         */
+        $public = Style::all()->where('type', '=', 'public'); //orderBy('role')->get();
+        $publicData = UserResource::collection($public);
+
+        $publicList = [];
+        foreach($publicData as $public)
         {
-            $partnersList []= $partner['name'];
+            $publicList []= $public['name'];
         }
 
         //5.
-        $filterEvents = [];
-
-
+ 
         /**
          * These are the criteria to filter events of clients, to avoid overfitted matching, I will add a new columns in envents
          * with topic, which is shared among styles and events
          *
          * TODO: add a `type' column into events to easily filter the type of events visible to users
          */
+        /**
+         * Busines: show clients only list of clients + public, nothing about team or private
+         */
+        $filterEvents = [];
         foreach($events as $event)
         {
             if(
                 in_array($event['client'], $clientsList) ||
-                in_array($event['client'], $partnersList) ||
-                $event['client'] === 'holiday' //this will be easily captured as a public type
+                in_array($event['client'], $publicList)
+                //$event['client'] === 'holiday' //this will be easily captured as a public type
             )
             {
                 $filterEvents []= $event;
