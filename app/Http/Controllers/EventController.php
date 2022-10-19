@@ -112,6 +112,15 @@ class EventController extends Controller
         {
             $publicList []= $public['name'];
         }
+        
+        $team = Style::all()->where('type', '=', 'team'); //orderBy('role')->get();
+        $teamData = UserResource::collection($team);
+
+        $teamList = [];
+        foreach($teamData as $team)
+        {
+            $teamList []= $team['name'];
+        }
 
         //5.
  
@@ -129,7 +138,8 @@ class EventController extends Controller
         {
             if(
                 in_array($event['client'], $clientsList) ||
-                in_array($event['client'], $publicList)
+                in_array($event['client'], $publicList) ||
+                in_array($event['client'], $teamList)
                 //$event['client'] === 'holiday' //this will be easily captured as a public type
             )
             {
@@ -150,6 +160,20 @@ class EventController extends Controller
          */
 
          //7.
+        $filterEvents = [];
+        foreach($events as $event)
+        {
+            if(
+                in_array($event['client'], $clientsList) ||
+                in_array($event['client'], $publicList)
+                //in_array($event['client'], $teamList)
+                //$event['client'] === 'holiday' //this will be easily captured as a public type
+            )
+            {
+                $filterEvents []= $event;
+            }
+        }
+
          foreach($filterEvents as &$event)
          {
              if ($event['client'] === 'holiday')
