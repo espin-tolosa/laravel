@@ -51,12 +51,14 @@ Route::get('/assets/{file}', function ($file)
     $content_type = [ 'js'  => 'application/javascript',
                       'css' => 'text/css',
                       'svg' => 'image/svg+xml',
+                      'jpg' => 'image/jpg',
                       'ttf' => 'font/ttf'
                     ];
 
     $max_age      = [ 'js'  => 'max-age=31536000',
                       'css' => 'max-age=31536000',
                       'svg' => 'max-age=31536000',
+                      'jpg' => 'max-age=31536000',
                       'ttf' => 'max-age=31536000'
                     ];
 
